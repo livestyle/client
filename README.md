@@ -39,7 +39,7 @@ A LiveStyle server is simply a Websocket server that passes events between clien
 
 ## Events reference
 
-It is not required that client consumer should handle all listed events. This list is simply a reference supported events.
+It is not required that client consumer should handle all listed events. Below is a list of available events:
 
 * `connect` — client connected to server.
 * `disconnect` — client disconnected from server.
