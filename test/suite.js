@@ -5,8 +5,9 @@ var client = require('../');
 describe('LiveStyle client connector', function() {
 	beforeEach(function() {
 		WebSocket.online = true;
+		WebSocket.emitter.removeAllListeners();
 		// turn off all client event listeners before each test
-		client.off();
+		client.disconnect().off();
 	});
 
 	it('connect', function(done) {
@@ -122,5 +123,30 @@ describe('LiveStyle client connector', function() {
 			.on('connect', function() {
 				client.send('test', {foo: 'bar'})
 			});
+	});
+
+	it('concurrency', function(done) {
+		// should create only one socket 
+		// connection for multiple `connect()` calls
+		var socketsCreated = 0;
+		var clients = 0;
+		WebSocket.emitter.on('create', function() {
+			socketsCreated++;
+		});
+
+		client.connect({timeout: 10})
+			.on('connect', function() {
+				clients++;
+			});
+
+		setTimeout(function() {
+			client.connect();
+		}, 40);
+
+		setTimeout(function() {
+			assert.equal(socketsCreated, 1);
+			assert.equal(clients, 1);
+			done();
+		}, 60);
 	});
 });

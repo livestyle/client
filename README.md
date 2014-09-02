@@ -18,7 +18,7 @@ client.connect()
 
 Client provides the following API:
 
-* `connect(config, callback)` – creates connection to LiveStyle server. If server is not available yet, tries to reconnect after some timeout. If client was already connected, the `connect()` method will drop conection and reconnect again. If `callback` is provided, invokes it with single argument indicating successfull connection (`true`/`false`). Optional `config` object may be passed with the following options:
+* `connect(config, callback)` – creates connection to LiveStyle server. If server is not available yet, tries to reconnect after some timeout. If client was already connected, the `connect()` method will re-use existing connection. If `callback` is provided, invokes it with single argument indicating successfull connection (`true`/`false`). Optional `config` object may be passed with the following options:
     * `host` – server host, default is `ws://127.0.0.1`
     * `port` — server port, default is `54000`
     * `timeout` — reconnect retry timeout (in milliseconds) if server is not available. Set `0` to disable automatic reconnect. Default is `2000`.
