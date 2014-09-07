@@ -41,11 +41,6 @@ define(function(require, exports, module) {
 	}
 
 	function createSocket(config, callback) {
-		if (typeof config === 'function') {
-			callback = config;
-			config = {};
-		}
-
 		config = extend({}, defaultConfig, config || {});
 		status = STATUS_CONNECTING;
 
@@ -98,9 +93,16 @@ define(function(require, exports, module) {
 		 * @param {Function} callback A function called with connection status
 		 */
 		connect: function(config, callback) {
+			if (typeof config === 'function') {
+				callback = config;
+				config = {};
+			}
+
 			if (status === STATUS_IDLE) {
 				retry = true;
 				createSocket(config, callback);
+			} else if (status === STATUS_CONNECTED && callback) {
+				callback(true, sock);
 			}
 
 			return this;
