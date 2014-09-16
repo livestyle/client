@@ -10,7 +10,8 @@ define(function(require, exports, module) {
 	var defaultConfig = {
 		host: 'ws://127.0.0.1',
 		port: 54000,
-		timeout: 2000
+		timeout: 2000,
+		endpoint: '/livestyle'
 	};
 	
 	var STATUS_IDLE = 'idle';
@@ -37,7 +38,7 @@ define(function(require, exports, module) {
 		if (opt.port) {
 			url += ':' + opt.port;
 		}
-		return url + '/livestyle';
+		return url + opt.endpoint;
 	}
 
 	function createSocket(config, callback) {
@@ -79,6 +80,7 @@ define(function(require, exports, module) {
 
 	function handleMessage(evt) {
 		var payload = typeof evt.data === 'string' ? JSON.parse(evt.data) : evt.data;
+		module.emit('message-receive', payload.name, payload.data);
 		module.emit(payload.name, payload.data);
 	}
 
