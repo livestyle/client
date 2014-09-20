@@ -41,8 +41,8 @@ A LiveStyle server is simply a Websocket server that passes events between clien
 
 It is not required that client consumer should handle all listed events. Below is a list of available events:
 
-* `connect` — client connected to server.
-* `disconnect` — client disconnected from server.
+* `client-connect` — client connected to server.
+* `client-disconnect` — client disconnected from server.
 * `editor-connect` — editor identification, dispatched every time a new LiveStyle-supported editor is connected to server. The payload is object with the following keys:
     * `id` — editor identifier
     * `title` — editors’ human-readable name

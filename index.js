@@ -53,7 +53,7 @@ define(function(require, exports, module) {
 		var s = new WebSocket(createUrl(config));
 		s.onclose = function() {
 			sock = null;
-			module.emit('disconnect');
+			module.emit('close');
 
 			if (status !== STATUS_CONNECTED && callback) {
 				// cannot establish initial connection
@@ -71,7 +71,7 @@ define(function(require, exports, module) {
 			sock = s;
 			status = STATUS_CONNECTED;
 			callback && callback(true, sock);
-			module.emit('connect');
+			module.emit('open');
 		};
 
 		s.onmessage = handleMessage;
@@ -128,6 +128,7 @@ define(function(require, exports, module) {
 		 */
 		send: function(name, data) {
 			if (this.connected) {
+				module.emit('message-send', name, data);
 				sock.send(JSON.stringify({
 					name: name,
 					data: data

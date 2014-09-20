@@ -11,7 +11,7 @@ describe('LiveStyle client connector', function() {
 	});
 
 	it('connect', function(done) {
-		client.connect().on('connect', function() {
+		client.connect().on('open', function() {
 			assert(client.connected);
 			done();
 		});
@@ -25,13 +25,13 @@ describe('LiveStyle client connector', function() {
 
 		var connected = false;
 		client.connect()
-			.on('connect', function() {
+			.on('open', function() {
 				connected = true;
 				setTimeout(function() {
 					client.disconnect();
 				}, 4);
 			})
-			.on('disconnect', function() {
+			.on('close', function() {
 				connected = false;
 			});
 
@@ -46,10 +46,10 @@ describe('LiveStyle client connector', function() {
 		WebSocket.online = false;
 		var reconnectCount = 0;
 		client.connect({timeout: 10})
-			.on('disconnect', function() {
+			.on('close', function() {
 				reconnectCount++;
 			})
-			.on('connect', function() {
+			.on('open', function() {
 				assert(reconnectCount > 3);
 				done();
 			});
@@ -68,10 +68,10 @@ describe('LiveStyle client connector', function() {
 		});
 
 		client.connect({timeout: 10})
-			.on('disconnect', function() {
+			.on('close', function() {
 				diconnectCount++;
 			})
-			.on('connect', function() {
+			.on('open', function() {
 				connectCount++;
 			});
 
@@ -120,7 +120,7 @@ describe('LiveStyle client connector', function() {
 		});
 
 		client.connect()
-			.on('connect', function() {
+			.on('open', function() {
 				client.send('test', {foo: 'bar'})
 			});
 	});
@@ -135,7 +135,7 @@ describe('LiveStyle client connector', function() {
 		});
 
 		client.connect({timeout: 10})
-			.on('connect', function() {
+			.on('open', function() {
 				clients++;
 			});
 
