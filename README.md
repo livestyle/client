@@ -47,15 +47,13 @@ It is not required that client consumer should handle all listed events. Below i
     * `id` — editor identifier
     * `title` — editors’ human-readable name
     * `icon` — editor icon, encoded in data:URL
-    * `files` — array of unique absolute paths of all currently opened editor files of supported syntax.
-    
-    > Note: for untitled files (e.g. newly created, but not saved) it is recommended to use `<untitled:SOME_ID>` naming scheme (all file names must be unique) although it’s not strictly required.
-
 * `editor-disconnect` — dispatched when editor is disconnected from server. The payload contains:
     * `id`: — id of disconnected editor (string)
-* `files` — list of opened files in editor is updates. Payload is an object with the following keys:
+* `editor-files` — list of opened files in editor is updates. Payload is an object with the following keys:
     * `id` — id of editor.
     * `files` — array of unique files opened in editor.
+
+    > Note: for untitled files (e.g. newly created, but not saved) it is recommended to use `<untitled:SOME_ID>` naming scheme (all file names must be unique) although it’s not strictly required.
 * `initial-content` — sets the initial (pristine) content for given file. The next `calculate-diff` request should calculate diff against this state. Initial content is pre-compiled for faster diffs. Event payload is an object with the following keys:
     * `uri` — files’ URI; could be absolute path, file id (for untitled files) or anything else that can uniquely identify file in editor.
     * `syntax` — files’ syntax.
