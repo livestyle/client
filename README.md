@@ -82,4 +82,7 @@ It is not required that client consumer should handle all listed events. Below i
     * `content` — files’ updated content.
     * `ranges` — array of `[start, end, 'updated_content']` arrays with modified ranges of original source. Applying these updates one-by-one on original source will result in same value as in `content`.
     * `hash` — file checksum, passed in `apply-patch` event. You can use this value to check if original content was changes since last `apply-patch` request and if it’s safe to use `ranges` for incremental updates.
+* `incoming-updates` — tells all connected clients that there are new updates (patches) for given file. In most cases, this event is dispatched by browsers to notify connected editors about available updates.
+    * `uri` — URI of file that should receive given updates (patches).
+    * `patches` — array of patches
 * `error` — dispatched when error occurs.
