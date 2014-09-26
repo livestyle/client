@@ -59,6 +59,7 @@ It is not required that client consumer should handle all listed events. Below i
     * `syntax` — files’ syntax.
     * `hash` — short file checksum (for example, a CRC32 of file content). If provided, this value will be used in caching for faster diffs.
     * `content` — files’ content.
+    * `globalDependencies` — array of file URI’s of global dependencies of currently transfoming stylesheet. Used for transforming preprocessor files. These dependencies will be fetched by *patcher* with `request-files` message.
 * `calculate-diff` — a request for diff calculation. Diff is calculated against initial file content, provided in `initial-content` event or against `previous` key of payload, if provided. Payload:
     * `uri` — files’ URI.
     * `syntax` — files’ syntax.
@@ -77,6 +78,7 @@ It is not required that client consumer should handle all listed events. Below i
     * `hash` — files’ checksum. If provided, it will be passed back in `patch` event to check if it’s possible to apply incremental update.
     * `content` — files’ content.
     * `patches` — array of patches to apply to files’ content.
+    * `globalDependencies` — array of file URI’s of global dependencies of currently transfoming stylesheet. Used for transforming preprocessor files. These dependencies will be fetched by *patcher* with `request-files` message.
 * `patch` — a result of applied patch to files’ content. Payload:
     * `uri` — files’ URI.
     * `content` — files’ updated content.
@@ -85,4 +87,10 @@ It is not required that client consumer should handle all listed events. Below i
 * `incoming-updates` — tells all connected clients that there are new updates (patches) for given file. In most cases, this event is dispatched by browsers to notify connected editors about available updates.
     * `uri` — URI of file that should receive given updates (patches).
     * `patches` — array of patches
+* `request-files` — a *patcher* sends this message to retreive dependencies for currently transforming stylesheet (`@import` url value in most cases). A *client* (editor) must return contents of given file list and return it in `files` message. It is possible that some of the passed files are not exist: in this case client must simply ignore such files and do not return the in `files` response.
+    * `token` — internal request token, used to identify payloads. This token must be returned in `files` response.
+    * `files` — array of file URI’s to retreive. Missing URLs must be ignored.
+* `files` — a response to `request-files` message.
+    * `token` — a token from `request-files` message
+    * `files` — array of files objects. A file object contains `uri`, `hash` and `content` keys.
 * `error` — dispatched when error occurs.
