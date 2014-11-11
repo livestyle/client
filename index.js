@@ -112,6 +112,13 @@ define(function(require, exports, module) {
 	}
 
 	var module = {
+		config: function(data) {
+			if (typeof data === 'object') {
+				extend(defaultConfig, data);
+			}
+			return defaultConfig;
+		},
+		
 		/**
 		 * Establishes connection to server
 		 * @param {Object} config Optional connection config
