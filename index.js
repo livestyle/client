@@ -8,8 +8,7 @@ define(function(require, exports, module) {
 	var eventMixin = require('./lib/eventMixin');
 
 	var defaultConfig = {
-		host: 'ws://127.0.0.1',
-		port: 54000,
+		host: 'ws://127.0.0.1:54000',
 		timeout: 2000,
 		endpoint: '/livestyle'
 	};
@@ -34,11 +33,7 @@ define(function(require, exports, module) {
 	}
 
 	function createUrl(opt) {
-		var url = opt.host;
-		if (opt.port) {
-			url += ':' + opt.port;
-		}
-		return url + opt.endpoint;
+		return opt.host + opt.endpoint;
 	}
 
 	function createSocket(config, callback) {
