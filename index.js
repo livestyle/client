@@ -32,45 +32,73 @@ define(function(require, exports, module) {
 		return obj;
 	}
 
-	function createUrl(opt) {
-		return opt.host + opt.endpoint;
+	function createSocket(url, callback) {
+		var s = new WebSocket(url);
+		s.onclose = function() {
+			if (status !== STATUS_CONNECTED && callback) {
+				// cannot establish initial connection
+				callback();
+			}
+		};
+
+		s.onopen = function() {
+			callback(s);
+		};
 	}
 
-	function createSocket(config, callback) {
+	function connect(config, callback) {
 		config = extend({}, defaultConfig, config || {});
 		status = STATUS_CONNECTING;
+		sock = null;
 
 		if (_timer) {
 			clearTimeout(_timer);
 			_timer = null;
 		}
 
-		var s = new WebSocket(createUrl(config));
-		s.onclose = function() {
-			sock = null;
-			module.emit('close');
+		// create pool of urls we should try before
+		// restarting connection sequence
+		var urls = (Array.isArray(config.host) ? config.host : [config.host]).map(function(url) {
+			return url + config.endpoint;
+		});
 
-			if (status !== STATUS_CONNECTED && callback) {
-				// cannot establish initial connection
-				callback(false);
+		var _connect = function() {
+			if (!urls.length) {
+				return reconnect(config);
 			}
 
-			if (config.timeout && retry) {
-				_timer = setTimeout(createSocket, config.timeout, config, callback);
-			} else {
-				status = STATUS_IDLE;
-			}
-		};
+			createSocket(urls.shift(), function(s) {
+				if (s) {
+					// connection established
+					sock = s;
+					status = STATUS_CONNECTED;
+					callback && callback(true, s);
+					module.emit('open');
 
-		s.onopen = function() {
-			sock = s;
-			status = STATUS_CONNECTED;
-			callback && callback(true, sock);
-			module.emit('open');
-		};
+					s.onclose = function() {
+						sock = null;
+						module.emit('close');
+						reconnect(config);
+					};
 
-		s.onmessage = handleMessage;
-		s.onerror = handleError;
+					s.onmessage = handleMessage;
+					s.onerror = handleError;
+				} else {
+					// no connection, try next url
+					module.emit('close');
+					_connect();
+				}
+			});
+		};
+		_connect();
+	}
+
+	function reconnect(config, callback) {
+		if (config.timeout && retry) {
+			_timer = setTimeout(connect, config.timeout, config, callback);
+		} else {
+			status = STATUS_IDLE;
+		}
 	}
 
 	function handleMessage(evt) {
@@ -97,7 +125,7 @@ define(function(require, exports, module) {
 
 			if (status === STATUS_IDLE) {
 				retry = true;
-				createSocket(config, callback);
+				connect(config, callback);
 			} else if (status === STATUS_CONNECTED && callback) {
 				callback(true, sock);
 			}

@@ -1,6 +1,9 @@
 var EventEmitter = require('events').EventEmitter;
 function WebSocket(url) {
 	this.url = url;
+	if (WebSocket.expectUrl) {
+		WebSocket.online = this.url === WebSocket.expectUrl;
+	}
 	WebSocket.emitter.emit('create', this);
 	var self = this;
 	setTimeout(function() {
@@ -10,6 +13,7 @@ function WebSocket(url) {
 
 WebSocket.emitter = new EventEmitter();
 WebSocket.online = true;
+WebSocket.expectUrl = null;
 
 WebSocket.prototype = {
 	onopen: function() {},

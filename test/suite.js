@@ -5,6 +5,7 @@ var client = require('../');
 describe('LiveStyle client connector', function() {
 	beforeEach(function() {
 		WebSocket.online = true;
+		WebSocket.expectUrl = null;
 		WebSocket.emitter.removeAllListeners();
 		// turn off all client event listeners before each test
 		client.disconnect().off();
@@ -148,5 +149,19 @@ describe('LiveStyle client connector', function() {
 			assert.equal(clients, 1);
 			done();
 		}, 60);
+	});
+
+	it('multiple urls', function(done) {
+		WebSocket.expectUrl = 'baz/livestyle';
+		var closed = 0;
+		
+		client.connect({host: ['foo', 'bar', 'baz']})
+			.on('close', function() {
+				closed++;
+			})
+			.on('open', function() {
+				assert.equal(closed, 2);
+				done();
+			});
 	});
 });
