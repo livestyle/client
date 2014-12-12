@@ -93,4 +93,6 @@ It is not required that client consumer should handle all listed events. Below i
 * `files` — a response to `request-files` message.
     * `token` — a token from `request-files` message
     * `files` — array of files objects. A file object contains `uri`, `hash` and `content` keys.
+* `request-unsaved-changes` — a client (browser) sends this message on page (re)load telling all connected editors to send unsaved changes for given files. Unsaved changes are simply a series of `calculate-diff` requests for updated files with `previous` property set to pristine version of file content.
+    * `files` — array of editor file URIs.
 * `error` — dispatched when error occurs.
