@@ -53,7 +53,7 @@ It is not required that client consumer should handle all listed events. Below i
     * `id` — id of editor.
     * `files` — array of unique files opened in editor.
 
-    > Note: for untitled files (e.g. newly created, but not saved) it is recommended to use `<untitled:SOME_ID>` naming scheme (all file names must be unique) although it’s not strictly required.
+    > Note: for untitled files (e.g. newly created, but not saved) it is recommended to use `[untitled:SOME_ID]` naming scheme (all file names must be unique) although it’s not strictly required.
 * `initial-content` — sets the initial (pristine) content for given file. The next `calculate-diff` request should calculate diff against this state. Initial content is pre-compiled for faster diffs. Event payload is an object with the following keys:
     * `uri` — files’ URI; could be absolute path, file id (for untitled files) or anything else that can uniquely identify file in editor.
     * `syntax` — files’ syntax.
