@@ -84,7 +84,7 @@ It is not required that client consumer should handle all listed events. Below i
     * `content` — files’ updated content.
     * `ranges` — array of `[start, end, 'updated_content']` arrays with modified ranges of original source. Applying these updates one-by-one on original source will result in same value as in `content`.
     * `hash` — file checksum, passed in `apply-patch` event. You can use this value to check if original content was changes since last `apply-patch` request and if it’s safe to use `ranges` for incremental updates.
-* `incoming-updates` — tells all connected clients that there are new updates (patches) for given file. In most cases, this event is dispatched by browsers to notify connected editors about available updates.
+* `incoming-updates` — tells all connected clients that there are new updates (patches) for given file. Almost the same as `diff` message but used to indicate that these patches were not requested by current client and initiated by other clients. In most cases, this event is dispatched by browsers to notify connected editors about available updates.
     * `uri` — URI of file that should receive given updates (patches).
     * `patches` — array of patches
 * `request-files` — a *patcher* sends this message to retreive dependencies for currently transforming stylesheet (`@import` url value in most cases). A *client* (editor) must return contents of given file list and return it in `files` message. It is possible that some of the passed files are not exist: in this case client must simply ignore such files and do not return the in `files` response.
