@@ -158,12 +158,27 @@ module.exports = extend({
 			}));
 		}
 		return this;
+	},
+
+	/**
+	 * Update status (for debugging and unit-testing)
+	 */
+	_setStatus: function(value) {
+		status = value;
 	}
 }, eventMixin);
 
-Object.defineProperty(module.exports, 'connected', {
-	enumerable: true,
-	get: function() {
-		return status === STATUS_CONNECTED;
+Object.defineProperties(module.exports, {
+	connected: {
+		enumerable: true,
+		get: function() {
+			return status === STATUS_CONNECTED;
+		}
+	},
+	status: {
+		enumerable: true,
+		get: function() {
+			return status;
+		}
 	}
 });
