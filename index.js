@@ -152,7 +152,7 @@ module.exports = extend({
 	send: function(name, data) {
 		if (this.connected) {
 			module.exports.emit('message-send', name, data);
-			sock.send(JSON.stringify({
+			sock && sock.send(JSON.stringify({
 				name: name,
 				data: data
 			}));
