@@ -96,3 +96,5 @@ It is not required that client consumer should handle all listed events. Below i
 * `request-unsaved-changes` — a client (browser) sends this message on page (re)load telling all connected editors to send unsaved changes for given files. Unsaved changes are simply a series of `calculate-diff` requests for updated files with `previous` property set to pristine version of file content.
     * `files` — array of editor file URIs.
 * `error` — dispatched when error occurs.
+    * `message` — error message.
+    * `origin` — object with command origins (command `name` and its data `uri`, if provided) that caused error.
